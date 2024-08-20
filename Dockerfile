@@ -1,8 +1,7 @@
-FROM centos:7
-LABEL maintainer="Jeff Geerling"
+FROM oraclelinux:7
 ENV container=docker
 
-ENV pip_packages "ansible"
+ENV pip_packages="ansible"
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN yum -y update; yum clean all; \
@@ -17,16 +16,16 @@ rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 # Install requirements.
 RUN yum makecache fast \
- && yum -y install deltarpm epel-release initscripts \
+ && yum -y install deltarpm initscripts \
  && yum -y update \
  && yum -y install \
       sudo \
       which \
-      python-pip \
+      python3-pip \
  && yum clean all
 
 # Upgrade Pip so cryptography package works.
-RUN python -m pip install --upgrade pip==20.3.4
+RUN python3 -m pip install --upgrade pip==20.3.4
 
 # Install Ansible via Pip.
 RUN pip install $pip_packages
